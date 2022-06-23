@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:eazy_pay/app/pages/fund.dart';
 import 'package:eazy_pay/app/pages/transfer.dart';
 import 'package:eazy_pay/app/widgets/virtual_card.dart';
@@ -25,11 +23,6 @@ class _DashboardState extends State<Dashboard> {
   String shamBalance = '********';
 
   final formatCurrency = NumberFormat("#,000", "en_NG");
-  String getCurrency() {
-    var format =
-        NumberFormat.simpleCurrency(locale: Platform.localeName, name: 'NGN');
-    return format.currencySymbol;
-  }
 
   void togglePasswordVisibile() {
     setState(() {

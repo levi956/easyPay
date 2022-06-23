@@ -5,6 +5,7 @@ import 'package:eazy_pay/core/system/navigation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/style/color_constants.dart';
+import '../services/auth/auth.dart';
 import '../services/domain/user.dart';
 import '../widgets/button.dart';
 import '../widgets/textfield.dart';
@@ -21,6 +22,7 @@ class Fund extends StatefulWidget {
 class _FundState extends State<Fund> {
   TextEditingController amount = TextEditingController();
   String source = '';
+  String transferPin = '';
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +69,7 @@ class _FundState extends State<Fund> {
                 height: 20,
               ),
               CustomTextField(
+                isHidden: false,
                 label: 'Amount',
                 textEditingController: amount,
                 keyboardType: TextInputType.number,
@@ -75,6 +78,7 @@ class _FundState extends State<Fund> {
                 height: 20,
               ),
               CustomTextField(
+                isHidden: false,
                 label: 'Funding Source',
                 onChanged: (v) {
                   setState(() {
@@ -83,11 +87,40 @@ class _FundState extends State<Fund> {
                 },
                 keyboardType: TextInputType.text,
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomTextField(
+                isHidden: true,
+                label: 'Eazy pay pin',
+                onChanged: (v) {
+                  setState(() {
+                    transferPin = v.trim();
+                  });
+                },
+                keyboardType: TextInputType.number,
+              ),
               const Spacer(),
               Center(
                 child: CustomButton(
                   text: 'PROCEED',
-                  onPressed: () => _fundWallet(),
+                  onPressed: () {
+                    BankingResponse verify =
+                        Auth().validatePin(pin: transferPin);
+                    if (verify.status) {
+                      _fundWallet();
+                    } else if (transferPin == '') {
+                      CherryToast.error(
+                        autoDismiss: true,
+                        title: const Text('Please enter your pin!'),
+                      ).show(context);
+                    } else {
+                      CherryToast.error(
+                        autoDismiss: true,
+                        title: const Text('Invalid Pin'),
+                      ).show(context);
+                    }
+                  },
                   buttonWidth: double.maxFinite,
                   validator: () {
                     return source != '' && amount.text != '';

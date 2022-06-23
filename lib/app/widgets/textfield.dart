@@ -68,11 +68,13 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextEditingController? textEditingController;
   final ValueChanged<String>? onChanged;
+  final bool? isHidden;
 
   const CustomTextField(
       {Key? key,
       required this.label,
       this.keyboardType,
+      this.isHidden,
       this.textEditingController,
       this.onChanged})
       : super(key: key);
@@ -97,6 +99,7 @@ class CustomTextField extends StatelessWidget {
             children: [
               Expanded(
                 child: TextField(
+                  obscureText: isHidden!,
                   cursorColor: primaryDarkBlue,
                   keyboardType: keyboardType,
                   controller: textEditingController,

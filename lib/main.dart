@@ -19,15 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: const NavBar(),
+      home: const InputPin(),
     );
   }
 }
-
-
-// to do
-// bills screen, airtime providers and dstv
-
-
-//user profile (name, image, sign out button, help, security)
-

@@ -7,6 +7,7 @@ import 'package:eazy_pay/core/system/navigation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/style/color_constants.dart';
+import '../services/auth/auth.dart';
 import '../services/domain/banking_response.dart';
 import '../services/domain/user.dart';
 import '../widgets/button.dart';
@@ -26,6 +27,7 @@ class _TransferState extends State<Transfer> {
   TextEditingController accounNumber = TextEditingController();
   String bankName = '';
   String note = '';
+  String transferPin = '';
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class _TransferState extends State<Transfer> {
                   height: 20,
                 ),
                 CustomTextField(
+                  isHidden: false,
                   label: 'Amount',
                   textEditingController: amount,
                   keyboardType: TextInputType.number,
@@ -82,6 +85,7 @@ class _TransferState extends State<Transfer> {
                   height: 20,
                 ),
                 CustomTextField(
+                  isHidden: false,
                   label: 'Bank',
                   onChanged: (v) {
                     setState(() {
@@ -94,6 +98,7 @@ class _TransferState extends State<Transfer> {
                   height: 20,
                 ),
                 CustomTextField(
+                  isHidden: false,
                   label: 'Account Number',
                   textEditingController: accounNumber,
                   keyboardType: TextInputType.number,
@@ -102,6 +107,7 @@ class _TransferState extends State<Transfer> {
                   height: 20,
                 ),
                 CustomTextField(
+                  isHidden: false,
                   label: 'Add A Note',
                   onChanged: (v) {
                     setState(() {
@@ -111,12 +117,42 @@ class _TransferState extends State<Transfer> {
                   keyboardType: TextInputType.text,
                 ),
                 const SizedBox(
+                  height: 20,
+                ),
+                CustomTextField(
+                  isHidden: true,
+                  label: 'Eazy pay pin',
+                  onChanged: (v) {
+                    setState(() {
+                      transferPin = v.trim();
+                    });
+                  },
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(
                   height: 130,
                 ),
                 Center(
                   child: CustomButton(
                     text: 'PROCEED',
-                    onPressed: () => _transfer(),
+                    onPressed: () {
+                      BankingResponse verify =
+                          Auth().validatePin(pin: transferPin);
+                      if (verify.status) {
+                        _transfer();
+                      } else if (transferPin == '') {
+                        CherryToast.error(
+                          autoDismiss: true,
+                          title: const Text('Please enter your pin!'),
+                        ).show(context);
+                      } else {
+                        CherryToast.error(
+                          autoDismiss: true,
+                          title: const Text('Invalid Pin'),
+                        ).show(context);
+                      }
+                    },
+                    // onPressed: () => _transfer(),
                     buttonWidth: double.maxFinite,
                     validator: () {
                       return bankName != '' &&

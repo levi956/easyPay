@@ -16,8 +16,8 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   static const List<Widget> _screens = [
     Dashboard(),
-    Bills(),
-    Profile(),
+    BillPage(),
+    ProfilePage(),
   ];
 
   Color white = Colors.white;
